@@ -8,7 +8,7 @@
     "author": "Takmiil Enterprise Solutions",
     "website": "https://www.takmiil.com/",
     "category": "Accounting",
-    "version": "18.0",
+    "version": "19.0",
     "depends": ["base", "account", 'product'],
     "data": [
         "security/ir.model.access.csv",

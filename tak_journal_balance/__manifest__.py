@@ -1,6 +1,6 @@
 {
     "name": "Show Journal Balance in Accounting Dashboard",
-    "version": "18.0",
+    "version": "19.0",
     "description": "Show Bank and Cash Journal Balance in Accounting Dashboard",
     "license": "LGPL-3",
     "category": "Accounting",

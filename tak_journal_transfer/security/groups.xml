@@ -9,6 +9,13 @@
         <field name="sequence">50</field>
     </record>
 
+
+    <record model="res.groups.privilege" id="res_groups_privilege_transfer">
+        <field name="name">Journal Transfer</field>
+        <field name="category_id" ref="tak_journal_transfer.module_category_journal_transfer"/>
+        <field name="sequence">7</field>
+    </record>
+
     <!-- ============================================ -->
     <!-- SECURITY GROUPS -->
     <!-- ============================================ -->
@@ -16,7 +23,7 @@
     <!-- User Group: Can create and view own transfers -->
     <record id="group_journal_transfer_user" model="res.groups">
         <field name="name">User</field>
-        <field name="category_id" ref="module_category_journal_transfer" />
+        <field name="privilege_id" ref="group_journal_transfer_user" />
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
         <field name="comment">Can create transfers and view own records</field>
     </record>
@@ -24,7 +31,7 @@
     <!-- Manager Group: Full access to all transfers -->
     <record id="group_journal_transfer_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="category_id" ref="module_category_journal_transfer" />
+        <field name="privilege_id" ref="group_journal_transfer_user" />
         <field name="implied_ids" eval="[(4, ref('group_journal_transfer_user'))]" />
         <field name="comment">Full access to all transfers and configuration</field>
     </record>
@@ -32,9 +39,8 @@
     <!-- Administrator Group: Can reset to draft (sensitive operation) -->
     <record id="group_journal_transfer_admin" model="res.groups">
         <field name="name">Administrator</field>
-        <field name="category_id" ref="module_category_journal_transfer" />
+        <field name="privilege_id" ref="group_journal_transfer_user" />
         <field name="implied_ids" eval="[(4, ref('group_journal_transfer_manager'))]" />
-        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
         <field name="comment">Can reset transferred entries to draft (accounting reversal)</field>
     </record>
 
