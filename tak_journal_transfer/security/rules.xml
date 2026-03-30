@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================ -->
+    <!-- RECORD RULES -->
+    <!-- ============================================ -->
+
+    <!-- Users can only see their own transfers or transfers in their company -->
+    <record id="rule_journal_transfer_user" model="ir.rule">
+        <field name="name">group_journal_transfer_manager Transfer: User - Own Records Only</field>
+        <field name="model_id" ref="model_tak_journal_transfer" />
+        <field name="domain_force">['|', ('create_uid', '=', user.id), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('tak_journal_transfer.group_journal_transfer_user'))]" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+
+    <!-- Managers can see all transfers in allowed companies -->
+    <record id="rule_journal_transfer_manager" model="ir.rule">
+        <field name="name">group_journal_transfer_manager Transfer: Manager - All Records</field>
+        <field name="model_id" ref="model_tak_journal_transfer" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups"
+            eval="[(4, ref('tak_journal_transfer.group_journal_transfer_manager'))]" />
+    </record>
+
+    <!-- Multi-company rule -->
+    <record id="rule_journal_transfer_multi_company" model="ir.rule">
+        <field name="name">group_journal_transfer_manager Transfer: Multi-Company</field>
+        <field name="model_id" ref="model_tak_journal_transfer" />
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id','in',company_ids)]</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_gross_profit">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <style>
+                        th, td {font-size: 14px;}
+                        th {font-weight:bold;}
+                    </style>
+
+                    <div class="text-center mb-4">
+                        <h2 style="font-weight: bold;">Gross Profit Report</h2>
+                        <p>
+                            Period:
+                            <span t-esc="date_from"/> to
+                            <span t-esc="date_to"/>
+                        </p>
+                    </div>
+
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr style="background-color:#f0f0f0;">
+                                <t t-if="group_by == 'category' or 'product' ">
+                                    <th>Category</th>
+                                </t>
+                                <th t-if="group_by == 'product'">Product</th>
+                                <th t-if="group_by == 'partner'">Customer</th>
+                                <th class="text-end">Actual Revenue</th>
+                                <th class="text-end">Actual Cost</th>
+                                <th class="text-end">Gross Profit</th>
+                                <th class="text-end">In %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="l">
+                                <tr>
+                                    <!-- Category cell only when grouping by product -->
+                                    <t t-if="group_by == 'product'">
+                                        <td>
+                                            <span t-esc="l.get('category_name')"/>
+                                        </td>
+                                    </t>
+                                    <td><span t-esc="l['name']"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="round(l['revenue'],2)"
+                                            t-options="{'widget':'monetary','display_currency':currency}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="round(l['cost'],2)"
+                                            t-options="{'widget':'monetary','display_currency':currency}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="round(l['gross_profit'],2)"
+                                            t-options="{'widget':'monetary','display_currency':currency}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="round(l['percentage'],2)"/>%
+                                    </td>
+                                </tr>
+                            </t>
+                            <!-- GRAND TOTAL ROW -->
+                            <tr style="background-color:#d9d9d9; font-weight:bold;">
+
+                                <!-- Empty Category cell if product grouping -->
+                                <t t-if="group_by == 'product'">
+                                    <td></td>
+                                </t>
+
+                                <td style="text-align:right;">GRAND TOTAL:</td>
+
+                                <td class="text-end">
+                                    <span t-esc="totals['revenue']"
+                                        t-options="{'widget':'monetary','display_currency':currency}"/>
+                                </td>
+
+                                <td class="text-end">
+                                    <span t-esc="totals['cost']"
+                                        t-options="{'widget':'monetary','display_currency':currency}"/>
+                                </td>
+
+                                <td class="text-end">
+                                    <span t-esc="totals['gross_profit']"
+                                        t-options="{'widget':'monetary','display_currency':currency}"/>
+                                </td>
+
+                                <td class="text-end">
+                                    <span t-esc="round(totals['percentage'],2)"/>%
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

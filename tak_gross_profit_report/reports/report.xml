@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_gross_profit" model="ir.actions.report">
+        <field name="name">Gross Profit</field>
+        <field name="model">tak.gross.profit.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tak_gross_profit_report.report_gross_profit</field>
+        <field name="report_file">tak_gross_profit_report.report_gross_profit</field>
+        <field name="binding_model_id" ref="model_tak_gross_profit_wizard"/>
+         <field name="print_report_name">'Gross Profit'</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+</odoo>

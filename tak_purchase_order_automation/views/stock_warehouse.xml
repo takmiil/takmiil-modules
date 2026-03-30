@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="purchase_confirm_extended_for_warehouse">
+            <field name="name">stock.warehose.extended.purchase</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref = "stock.view_warehouse"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="inside">
+                    <group name="purchase_automation" string="Purchase Automation">
+                        <field name= "is_receipt_set_to_done"/>
+                        <field name= "create_bill" />
+                        <field name= "validate_bill" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

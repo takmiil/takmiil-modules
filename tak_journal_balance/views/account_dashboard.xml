@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="account_journal_dashboard_inherit" model="ir.ui.view">
+        <field name="name">account.journal.view.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='dashboard_bank_cash_right']" position="inside">
+                <div class="row">
+                    <div id="dashboard_bank_cash_mgs_balance" class="col-auto text-end">
+                        <h5 type="object" style="color: green; font-weight:bolder;" title="Balance" >Running Balance</h5>
+                    </div>
+                    <div class="col-auto text-end">
+                        <span style="color: green; font-weight:bolder;">
+                            <t t-out="dashboard.balance"/>
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

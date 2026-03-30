@@ -1,0 +1,56 @@
+<odoo>
+    <record id="view_gross_profit_wizard" model="ir.ui.view">
+        <field name="name">tak.gross.profit.wizard.form</field>
+        <field name="model">tak.gross.profit.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Gross Profit Report">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="category_id"/>
+                        <field name="product_id"/>
+                        <!-- <field name="analytic_account_id"/> -->
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="date_to"/>
+                        <field name="partner_id"/>
+                        <field name="group_by" widget="radio"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_pdf"
+                            type="object"
+                            string="PDF"
+                            class="btn-primary"/>
+                    <button name="action_print_excel"
+                            type="object"
+                            string="Excel"/>
+                    <button string="Cancel"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_gross_profit_wizard" model="ir.actions.act_window">
+        <field name="name">Gross Profit Report</field>
+        <field name="res_model">tak.gross.profit.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menuitem -->
+    <menuitem id="menu_profitability"
+               name="Profitability"
+               groups="account.group_account_manager"
+               parent="account.menu_finance_reports"
+               sequence="9"/>
+    <menuitem id="menu_gross_profit_wizard"
+               name="Gross Profit Report"
+               action="action_gross_profit_wizard"
+               groups="account.group_account_manager"
+               parent="menu_profitability"
+               sequence="1"/>
+</odoo>

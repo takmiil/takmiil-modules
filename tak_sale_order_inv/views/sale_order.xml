@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Sale Order Tree View -->
+    <record id="view_order_tree_inherit_invoice_amounts" model="ir.ui.view">
+        <field name="name">sale.order.tree.invoice.amounts</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add fields after amount_total -->
+            <field name="amount_total" position="after">
+                <field name="amount_total_in_currency_signed" 
+                       sum="Total Invoiced" 
+                       optional="show"
+                       widget="monetary"
+                       decoration-success="amount_total_in_currency_signed > 0"/>
+                <field name="amount_residual_signed" 
+                       sum="Total Due" 
+                       optional="show"
+                       widget="monetary"
+                       decoration-danger="amount_residual_signed > 0"/>
+                <field name="invoice_count" 
+                       optional="hide"
+                       string="Invoices"/>
+            </field>
+        </field>
+    </record>
+    <!-- Add Print Invoice Button to Sale Order Form -->
+    <record id="view_order_form_inherit_print_invoice" model="ir.ui.view">
+        <field name="name">sale.order.form.print.invoice</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Print Invoices button in header -->
+            <header position="inside">
+                <button name="action_print_invoices" 
+                        string="Print Invoices" 
+                        type="object" 
+                        class="btn btn-primary"
+                        invisible="invoice_count == 0"
+                        help="Print all posted invoices"/>
+            </header>
+        </field>
+    </record>
+    <!-- Inherit Quotation Tree View (if you want it there too) -->
+    <record id="view_quotation_tree_inherit_invoice_amounts" model="ir.ui.view">
+        <field name="name">sale.quotation.tree.invoice.amounts</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="after">
+                <field name="amount_total_in_currency_signed" 
+                       sum="Total Invoiced" 
+                       optional="show"
+                       widget="monetary"
+                       decoration-success="amount_total &lt; amount_total_in_currency_signed"/>
+                <field name="amount_residual_signed" 
+                       sum="Total Due" 
+                       optional="show"
+                       widget="monetary"
+                       decoration-danger="amount_residual_signed &gt; 0" />
+                <field name="invoice_count" 
+                       optional="hide"
+                       string="Invoices"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="view_sales_order_filter_inherit_today" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.today</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <!-- Add filter after the existing filters -->
+                <filter name="my_quotation" position="after">
+                    <separator/>
+                    <filter string="Today's Confirmed Orders" name="today_confirmed" 
+                        domain="[('date_order', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')),
+                                 ('date_order', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59')),
+                                 ('state', '=', 'sale')]"/>
+                    </filter>
+                </field>
+            </record>
+    </odoo>

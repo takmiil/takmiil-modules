@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View res.partner form
+    <record id="view_res_partner_balance_form" model="ir.ui.view">
+        <field name="name">Partner Balance in Form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref=""/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='']">
+            </xpath>
+        </field>
+    </record> -->
+
+
+    <!-- View res.partner list -->
+    <record id="view_res_partner_list" model="ir.ui.view">
+        <field name="name">Partner Balance in List View</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="credit" decoration-success="1" decoration-bf="1"/>
+                <field name="debit"  decoration-danger="1" decoration-bf="1" />
+                <!-- <field name="total_all_due"  decoration-info="1" decoration-bf="1"/> -->
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <!-- View account.payment list -->
+    <record id="view_balance_payment_form" model="ir.ui.view">
+        <field name="name">Partner Balance in Payment Form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="before">
+                <!-- <field name="partner_balance" style="font-weight: bold;color:red" invisible="not partner_id"/> -->
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

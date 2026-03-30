@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_tak_partner_statement">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <style>
+                        th, td {font-size: 14px;} 
+                        th {font-weight:bold;}
+                    </style>
+                    <div class="row mb-4">
+                        <div class="col-12 text-center">
+                            <h2>Partner Statement</h2>
+                            <p t-if="date_from or date_to" style='font-weight:bold;'>
+                                Period:
+                                <span t-if="date_from" t-esc="date_from"/> to
+                                <span t-if="date_to" t-esc="date_to"/>
+                            </p>
+                            <p t-if="include_invoice_details" class="text-info">
+                                <strong>With Invoice Details</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Loop through partners -->
+                    <t t-foreach="data" t-as="partner_data">
+                        <div class="partner-section mb-5" style="page-break-inside: avoid;">
+                            <!-- Partner Header -->
+                            <div class="row bg-light p-2 mb-3 border">
+                                <div class="col-12">
+                                    <h4 class="m-0">
+                                        <i class="fa fa-user"/>
+                                        <span t-esc="partner_data['partner'].name"/>
+                                    </h4>
+                                    <small class="text-muted" t-if="partner_data['partner'].ref">
+                                        Ref:
+                                        <span t-esc="partner_data['partner'].ref"/>
+                                    </small>
+                                    <div class="text-muted small">
+                                        <span>Partner</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Loop through currencies -->
+                            <t t-foreach="partner_data['currencies']" t-as="currency_data">
+                                <!-- Currency Header (only if multiple currencies) -->
+                                <div t-if="currency_data['show_currency_header']" 
+                                     class="row bg-secondary text-white p-2 mb-2">
+                                    <div class="col-12">
+                                        <strong>Currency:
+                                            <span t-esc="currency_data['currency'].name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <!-- Balance Summary Row -->
+                                <div class="row mb-3 p-2 border-bottom bg-info-light">
+                                    <div class="col-6">
+                                        <strong>Previous Balance:</strong>
+                                        <span t-if="currency_data['previous_balance']" t-esc="currency_data['previous_balance']" t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                    </div>
+                                    <!-- <div class="col-6 text-right">
+                                        <strong>Forward Balance:</strong>
+                                        <span t-esc="currency_data['forward_balance']" 
+                                              t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                    </div> -->
+                                </div>
+                                <!-- Transactions Table -->
+                                <table class="table table-sm table-bordered">
+                                    <tr style="background-color: #f0f0f0;">
+                                        <th>Date</th>
+                                        <th>Reference</th>
+                                        <th>Description</th>
+                                        <th class="text-right">Debit</th>
+                                        <th class="text-right">Credit</th>
+                                        <th class="text-right">Balance</th>
+                                    </tr>
+                                    <tbody>
+                                         <tr style="background-color: #f9f9f9; font-style: italic;">
+                                                    <td colspan="5" style="padding: 6px 8px; border: 1px solid #000; text-align: right;">Previous Balance (before <span t-esc="date_from"/>):</td>
+                                                    <!-- <td style="padding: 6px 8px; border: 1px solid #000; text-align: left;">
+                                                        <t t-if="currency_data['previous_balance'] > 0">
+                                                            <span t-esc="currency_data['previous_balance']" t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                        </t>
+                                                        <t t-else="">-</t>
+                                                    </td>
+                                                    <td style="padding: 6px 8px; border: 1px solid #000; text-align: left;">
+                                                        <t t-if="currency_data['previous_balance'] &lt; 0">
+                                                            <span t-esc="abs(currency_data['previous_balance'])"/>
+                                                        </t>
+                                                        <t t-else="">-</t>
+                                                    </td> -->
+                                                    <td style="padding: 6px 8px; border: 1px solid #000; text-align: left; font-weight: bold;">
+                                                        <span t-esc="currency_data['previous_balance']"  t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                    </td>
+                                                </tr>
+                                        <t t-foreach="currency_data['lines']" t-as="line">
+                                            <!-- Main Transaction Row -->
+                                            <tr>
+                                                <td  nowrap="nowrap">
+                                                    <span t-esc="line['date']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['ref']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['name']"/>
+                                                </td>
+                                                <td  nowrap="nowrap" class="text-right">
+                                                    <span t-esc="line['debit']" 
+                                                          t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                </td>
+                                                <td  nowrap="nowrap" class="text-right">
+                                                    <span t-esc="line['credit']" 
+                                                          t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                </td>
+                                                <td  nowrap="nowrap" class="text-right font-weight-bold">
+                                                    <span t-esc="line['balance']" 
+                                                          t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                </td>
+                                            </tr>
+                                            <!-- Invoice Details Sub-table (Detailed View Only) -->
+                                            <tr t-if="line.get('has_invoice_details') and line.get('invoice_lines')">
+                                                <td colspan="7" class="p-0">
+                                                    <table class="table table-sm table-borderless" 
+                                                           style="background-color: #f8f9fa;">
+                                                        <thead>
+                                                            <tr class="text-muted small">
+                                                                <th>Product</th>
+                                                                <th class="text-right">Qty</th>
+                                                                <th class="text-right">Unit Price</th>
+                                                                <th>Tax</th>
+                                                                <th class="text-right">Subtotal</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr t-foreach="line['invoice_lines']" t-as="inv_line">
+                                                                <td class="small">
+                                                                    <span t-esc="inv_line['product']"/>
+                                                                </td>
+                                                                <td class="text-right small">
+                                                                    <span t-esc="inv_line['quantity']"/>
+                                                                </td>
+                                                                <td class="text-right small">
+                                                                    <span t-esc="inv_line['unit_price']" 
+                                                                          t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                                </td>
+                                                                <td class="small">
+                                                                    <span t-esc="inv_line['tax']"/>
+                                                                </td>
+                                                                <td class="text-right small">
+                                                                    <span t-esc="inv_line['subtotal']" 
+                                                                          t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <!-- Totals Row -->
+                                        <tr style="background-color: #e1f0e3; font-weight:bold;">
+                                            <td colspan="3" style='text-align:center;'>TOTAL</td>
+                                            <td class="text-right">
+                                                <span t-esc="currency_data['currency_totals']['debit']" 
+                                                      t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="currency_data['currency_totals']['credit']" 
+                                                      t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="currency_data['forward_balance']" 
+                                                      t-options="{'widget': 'monetary', 'display_currency': currency_data['currency']}"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- End of Currency Section -->
+                                <div class="mb-4"></div>
+                            </t>
+                        </div>
+                        <!-- Page break between partners if multiple -->
+                        <t t-if="show_multiple_partners">
+                            <div style="page-break-after: always;"></div>
+                        </t>
+                    </t>
+                    <!-- Grand Totals Section -->
+                    <!-- <div class="grand-totals-section mt-5 pt-4 border-top">
+                        <div class="row bg-dark text-white p-3">
+                            <div class="col-12">
+                                <h4 class="m-0">Grand Totals</h4>
+                            </div>
+                        </div>
+                        <div class="row p-3 bg-light border">
+                            <div class="col-3 text-center">
+                                <div class="text-muted small">Total Debit</div>
+                                <div class="h4 text-success">
+                                    <span t-esc="grand_totals['total_debit']" 
+                                          t-options="{'widget': 'float', 'precision': 2}"/>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="text-muted small">Total Credit</div>
+                                <div class="h4 text-danger">
+                                    <span t-esc="grand_totals['total_credit']" 
+                                          t-options="{'widget': 'float', 'precision': 2}"/>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center border-left">
+                                <div class="text-muted small">Final Balance</div>
+                                <div class="h4 text-primary font-weight-bold">
+                                    <span t-esc="grand_totals['final_balance']" 
+                                          t-options="{'widget': 'float', 'precision': 2}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

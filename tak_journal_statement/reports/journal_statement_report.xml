@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_journal_statement">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <style>
+                        th, td {font-size: 13px;  } 
+                        th {font-weight:bold;}
+                    </style>
+                    <!-- Report Header -->
+                    <div class="text-center mb-4">
+                        <h2 style="font-weight: bold; margin-bottom: 5px;">Bank and Cash Statement</h2>
+                        <p style="font-size: 14px; color: #666;">
+                            Period: <span t-esc="date_from"/> to <span t-esc="date_to"/>
+                        </p>
+                    </div>
+
+                    <t t-if="not journals_data">
+                        <div class="alert alert-info text-center">
+                            <p>No transactions found for the selected period and journals.</p>
+                        </div>
+                    </t>
+
+                    <!-- Main Table -->
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr style="background-color: #f0f0f0;">
+                                <th>Date</th>
+                                <th>Partner</th>
+                                <th>Reference</th>
+                                <th >Description</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="journals_data" t-as="journal_data">
+                                <!-- Journal Header Row -->
+                                <tr style="background-color: #e8e8e8;">
+                                    <td colspan="7" style="padding: 10px 8px; border: 1px solid #000; font-weight: bold; font-size: 13px;">
+                                        <span t-esc="journal_data['journal_name']"/> 
+                                        (<span t-esc="journal_data['journal_code']"/>) - 
+                                        Account: <span t-esc="journal_data['account_code']"/> <span t-esc="journal_data['account_name']"/>
+                                    </td>
+                                </tr>
+
+                                <!-- Previous Balance Row (if exists and not zero) -->
+                                <t t-if="journal_data['previous_balance'] != 0">
+                                    <tr style="background-color: #f9f9f9; font-style: italic;">
+                                        <td colspan="4" style="padding: 6px 8px; border: 1px solid #000; text-align: right;">
+                                            Previous Balance (before <span t-esc="date_from"/>):
+                                        </td>
+                                        <td style="padding: 6px 8px; border: 1px solid #000; text-align: right;">
+                                            <t t-if="journal_data['previous_balance'] > 0">
+                                                <span t-esc="journal_data['previous_balance']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                            </t>
+                                            <t t-else="">-</t>
+                                        </td>
+                                        <td style="padding: 6px 8px; border: 1px solid #000; text-align: right;">
+                                            <t t-if="journal_data['previous_balance'] &lt; 0">
+                                                <span t-esc="abs(journal_data['previous_balance'])" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                            </t>
+                                            <t t-else="">-</t>
+                                        </td>
+                                        <td style="padding: 6px 8px; border: 1px solid #000; text-align: right; font-weight: bold;">
+                                            <span t-esc="journal_data['previous_balance']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!-- Transaction Lines -->
+                                <t t-foreach="journal_data['lines']" t-as="line">
+                                    <tr>
+                                        <td nowrap="nowrap" style="padding: 6px 8px; border: 1px solid #000; text-align: left;">
+                                            <span t-esc="line['date']"/>
+                                        </td>
+                                        
+                                         <td style="padding: 6px 8px; border: 1px solid #000; text-align: left;">
+                                            <span t-esc="line['partner']"/>
+                                        </td>
+
+                                        <td style="padding: 6px 8px; border: 1px solid #000; text-align: left;">
+                                            <span t-esc="line['reference']"/>
+                                        </td>
+                                        <td style="padding: 6px 8px; border: 1px solid #000; text-align: left;">
+                                            <span t-esc="line['description']"/>
+                                        </td>
+                                        <td nowrap="nowrap" style="padding: 6px 8px; border: 1px solid #000; text-align: right;">
+                                            <t t-if="line['debit'] > 0">
+                                                <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                            </t>
+                                            <t t-else="">-</t>
+                                        </td>
+                                        <td nowrap="nowrap" style="padding: 6px 8px; border: 1px solid #000; text-align: right;">
+                                            <t t-if="line['credit'] > 0">
+                                                <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                            </t>
+                                            <t t-else="">-</t>
+                                        </td>
+                                        <td nowrap="nowrap" style="padding: 6px 8px; border: 1px solid #000; text-align: right; font-weight: 500;">
+                                            <span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!-- No Transactions Message -->
+                                <t t-if="not journal_data['lines']">
+                                    <tr>
+                                        <td colspan="6" style="padding: 10px 8px; border: 1px solid #000; text-align: center; color: #999; font-style: italic;">
+                                            No transactions for this period
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!-- Journal Subtotal Row -->
+                                <tr style="background-color: #d0d0d0;">
+                                    <td colspan="4" style="padding: 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 12px;">
+                                        Subtotal for <span t-esc="journal_data['journal_name']"/>:
+                                    </td>
+                                    <td style="padding: 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 12px;">
+                                        <span t-esc="journal_data['total_debit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </td>
+                                    <td style="padding: 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 12px;">
+                                        <span t-esc="journal_data['total_credit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </td>
+                                    <td style="padding: 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 12px;">
+                                        <span t-esc="journal_data['final_balance']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </td>
+                                </tr>
+
+                                <!-- Spacing between journals -->
+                                <!-- <tr>
+                                    <td colspan="6" style="height: 10px; border-left: 1px solid #000; border-right: 1px solid #000;"></td>
+                                </tr> -->
+                            </t>
+
+                            <!-- Grand Total Row -->
+                            <t t-if="len(journals_data) > 1">
+                                <tr style="background-color: #edf2ef !important; color: white !important; font-weight: bold; font-size: 14px; ">
+                                    <td colspan="4" style="padding: 12px 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 14px;">
+                                        GRAND TOTAL:
+                                    </td>
+                                    <td style="padding: 12px 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 14px;">
+                                        <span t-esc="grand_total_debit" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </td>
+                                    <td style="padding: 12px 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 14px;">
+                                        <span t-esc="grand_total_credit" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </td>
+                                    <td style="padding: 12px 8px; border: 2px solid #000; text-align: right; font-weight: bold; font-size: 14px;">
+                                        <span t-esc="grand_total_balance" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_vendor_list_custom" model="ir.ui.view">
+        <field name="name">res.vendor.list.custom</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Vendors">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="city"/>
+                <field name="credit" decoration-success="1" decoration-bf="1"/>
+                <field name="debit" decoration-danger="1" decoration-bf="1" />
+                <!-- <field name="total_all_due" decoration-info="1" decoration-bf="1"/> -->
+            </list>
+        </field>
+    </record>
+
+    <record id="action_vendor_custom_list" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>
+    </record>
+
+
+    <record id="action_vendor_payment_custom_form" model="ir.actions.act_window">
+        <field name="name">Vendor Payments</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_payment_type': 'outbound','default_partner_type': 'supplier','search_default_outbound_filter': 1,'default_move_journal_types': ('bank', 'cash'),'display_account_trust': True,}</field>
+    </record>
+
+
+    <!-- Add Vendor Payment Menu to Sale Order  -->
+    <menuitem id="vendor_payment_custom_menu" name="Vendor Payment" action="tak_purchase_order_automation.action_vendor_payment_custom_form" parent="purchase.menu_purchase_root" sequence="3"/>
+
+    <!-- Add Vendor Menu to Sale Order -->
+    <menuitem id="vendors_custom_menu" name="Vendor" action="tak_purchase_order_automation.action_vendor_custom_list" parent="purchase.menu_purchase_root" sequence="2"/>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="seq_tak_journal_transfer" model="ir.sequence">
+            <field name="name">Tak Journal Transfer</field>
+            <field name="code">tak.journal.transfer</field>
+            <field name="prefix">TRF/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+    </data>
+</odoo>
