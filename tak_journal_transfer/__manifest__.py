@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Journal Transfer',
-    'version': '19.0',
+    'version': '19.1',
     'summary': """Transfer Funds Between Journals""",
     'author': 'Takmiil Enterprise Solutions',
     'website': 'https://www.takmiil.com/',

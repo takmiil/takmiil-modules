@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-        <record id="view_order_form_inherit_delivery_validation" model="ir.ui.view">
-            <field name="name">sale.order.form.inherit.delivery.validation</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//header" position="inside">
-                    <button 
-                        name="action_validate_all_deliveries" 
-                        type="object" 
-                        string="Validate Deliveries"
-                        class="oe_highlight"
-                        invisible="outgoing_picking_count == 0"
-                        groups="stock.group_stock_user"
-                    />
-                </xpath>
-                <xpath expr="//field[@name='delivery_status']" position="after">
-                    <field name="outgoing_picking_count" invisible="1"/>
-                </xpath>
-            </field>
-        </record>
-    </data>
+
+    <record id="view_order_form_inherit_delivery_validation" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.delivery.validation</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_validate_all_deliveries" type="object" string="Validate Deliveries" class="oe_highlight" invisible="outgoing_picking_count == 0" groups="stock.group_stock_user" />
+            </xpath>
+            <xpath expr="//field[@name='delivery_status']" position="after">
+                <field name="outgoing_picking_count" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit_delivery_status" model="ir.ui.view">
+        <field name="name">sale.order.tree.delivery.status</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <!-- Add fields after amount_total -->
+
+            <xpath expr="//list" position="inside">
+                <field name="delivery_status" decoration-success="delivery_status == 'full'" decoration-warning="delivery_status == 'partial'" decoration-info="delivery_status in ['pending', 'started']" widget="badge" optional="show"/>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>

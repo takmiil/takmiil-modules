@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Partner Balance',
-    'version': '19.0',
+    'version': '19.1',
     'summary': """Show Partner Balance in Form, List View and in Payment Form""",
     'author':'Takmiil Enterprise Solutions',
     'website': 'https://www.takmiil.com/',

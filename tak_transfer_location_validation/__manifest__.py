@@ -1,6 +1,6 @@
 {
     "name": "Stock Transfer Location Validation",
-    "version": "19.0",
+    "version": "19.1",
     "description": "Validates stock transfers between locations.",
     "license": "LGPL-3",
     "category": "Inventory",

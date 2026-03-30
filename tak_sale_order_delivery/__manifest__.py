@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Sale Order Delivery",
-    "version": "19.0",
+    "version": "19.1",
     "category": "Purchases",
     "maintainer": "Takmiil Enterprise Solutions",
     "summary": """This Module Handles Initial Delivery Orders Validations from Sale Order Form""",

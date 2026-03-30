@@ -1,6 +1,6 @@
 {
     "name": "Journal Statement",
-    "version": "19.0",
+    "version": "19.1",
     "description": "View Journal Statement within a date range",
     "license": "LGPL-3",
     "category": "Accounting",

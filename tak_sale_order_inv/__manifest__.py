@@ -1,6 +1,6 @@
 {
     "name": "Invoice Info in Sale Order",
-    "version": "19.0",
+    "version": "19.1",
     "description": "This Module is Used to Show Invoice Information in Sale Order",
     "license": "LGPL-3",
     "category": "Accounting",

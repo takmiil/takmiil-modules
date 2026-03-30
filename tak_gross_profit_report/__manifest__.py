@@ -1,6 +1,6 @@
 {
     "name": "Gross Profit Report",
-    "version": "19.0",
+    "version": "19.1",
     "description": "View Gross Profit Report within a date range by customer, product, and more.",
     "license": "LGPL-3",
     "category": "Accounting",

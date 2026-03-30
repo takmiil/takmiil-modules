@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Partner Statement',
-    'version': '19.0',
+    'version': '19.1',
     'category': 'Accounting/Accounting',
     'summary': 'Advanced Partner Statement with Multi-Currency Support',
     'description': """

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="view_customer_list_custom" model="ir.ui.view">
+    <field name="name">res.customer.list.custom</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+      <list string="Customers">
+        <field name="name"/>
+        <field name="phone"/>
+        <field name="email"/>
+        <field name="city"/>
+        <field name="credit" decoration-success="1" decoration-bf="1"/>
+        <field name="debit" decoration-danger="1" decoration-bf="1" />
+      </list>
+    </field>
+  </record>
+
+
+
+  <record id="action_partner_custom_list" model="ir.actions.act_window">
+    <field name="name">Customers</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">list,form</field>
+    <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
+    <field name="view_id" ref="sale_order_automation.view_customer_list_custom"/>
+  </record>
+
+
+  <record id="action_customer_payment_custom_form" model="ir.actions.act_window">
+    <field name="name">Customer Payments</field>
+    <field name="res_model">account.payment</field>
+    <field name="view_mode">list,form</field>
+    <field name="context">{'default_payment_type': 'inbound','default_partner_type': 'customer','search_default_inbound_filter': 1,'default_move_journal_types': ('bank', 'cash'),'display_account_trust': True}</field>
+    <field name="view_ids" eval="[(5, 0, 0), 
+        (0, 0, {'view_mode': 'list', 'view_id': ref('account.view_account_payment_tree')}), 
+        (0, 0, {'view_mode': 'form', 'view_id': ref('account.view_account_payment_form')})]"/>
+  </record>
+
+
+  <!-- Add Customer Payment Menu to Sale Order  -->
+  <menuitem id="customer_payment_custom_menu" name="Customer Payment" action="sale_order_automation.action_customer_payment_custom_form" parent="sale.sale_menu_root" sequence="18"/>
+
+  <!-- Add Customer Menu to Sale Order -->
+  <menuitem id="customer_custom_menu" name="Customer" action="sale_order_automation.action_partner_custom_list" parent="sale.sale_menu_root" sequence="15"/>
+
+</odoo>

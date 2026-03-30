@@ -9,29 +9,21 @@
         <field name="arch" type="xml">
             <form string="Journal Transfer">
                 <header>
-                    <button name="action_confirm" string="Confirm" type="object"
-                        class="oe_highlight" invisible="state != 'draft'"
-                        confirm="Are you sure you want to execute this transfer?" />
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'" confirm="Are you sure you want to execute this transfer?" />
 
-                    <button name="action_reset_to_draft" string="Reset to Draft" type="object"
-                        invisible="state != 'posted'"
-                        confirm="This will Delete the journal entries. Continue?" />
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" invisible="state != 'posted'" confirm="This will Delete the journal entries. Continue?" />
 
-                    <button name="action_cancel" string="Cancel" type="object"
-                        invisible="state not in ('draft')" class="btn-secondary" />
-                    <field name="state" widget="statusbar"
-                        statusbar_visible="draft,posted,cancelled" />
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state not in ('draft')" class="btn-secondary" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled" />
                 </header>
                 <sheet>
                     <!-- Smart Button Box -->
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_moves" type="object" 
-                            class="oe_stat_button" icon="fa-book"
-                            invisible="move_count == 0">
+                        <button name="action_view_moves" type="object" class="oe_stat_button" icon="fa-book" invisible="move_count == 0">
                             <field name="move_count" widget="statinfo" string="Entries"/>
                         </button>
                     </div>
-                    
+
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1" />
@@ -52,8 +44,7 @@
                                         <strong>From:</strong>
                                     </td>
                                     <td style="padding: 4px 8px;">
-                                        <field name="source_journal_id"
-                                            readonly="state in ['cancelled', 'posted']" />
+                                        <field name="source_journal_id" readonly="state in ['cancelled', 'posted']" />
                                     </td>
                                     <td style="padding: 4px 0;">
                                         <field name="source_balance" readonly="1" widget="monetary" />
@@ -64,12 +55,10 @@
                                         <strong>To:</strong>
                                     </td>
                                     <td style="padding: 4px 8px;">
-                                        <field name="destination_journal_id"
-                                            readonly="state in ['cancelled', 'posted']" />
+                                        <field name="destination_journal_id" readonly="state in ['cancelled', 'posted']" />
                                     </td>
                                     <td style="padding: 4px 0;">
-                                        <field name="destination_balance" readonly="1"
-                                            widget="monetary" />
+                                        <field name="destination_balance" readonly="1" widget="monetary" />
                                     </td>
                                 </tr>
                             </table>
@@ -95,7 +84,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- ============================================ -->
     <!-- LIST VIEW -->
     <!-- ============================================ -->
@@ -103,19 +92,17 @@
         <field name="name">tak.journal.transfer.list</field>
         <field name="model">tak.journal.transfer</field>
         <field name="arch" type="xml">
-            <list string="Journal Transfers" decoration-muted="state == 'cancelled'"
-                decoration-success="state == 'posted'" decoration-info="state == 'draft'" default_order="id desc,name desc">
+            <list string="Journal Transfers" decoration-muted="state == 'cancelled'" decoration-success="state == 'posted'" decoration-info="state == 'draft'" default_order="id desc,name desc">
                 <field name="name" />
                 <field name="date" />
                 <field name="source_journal_id" />
                 <field name="destination_journal_id" />
                 <field name="amount" sum="Total" />
-                <field name="state" widget="badge" decoration-success="state == 'posted'"
-                    decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'" />
+                <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'" />
             </list>
         </field>
     </record>
-    
+
     <!-- ============================================ -->
     <!-- SEARCH VIEW -->
     <!-- ============================================ -->
@@ -130,18 +117,16 @@
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
                 <filter name="posted" string="posted" domain="[('state', '=', 'posted')]" />
                 <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]" />
-                <group string="Group By" expand="0">
-                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}" />
-                    <filter name="group_by_source" string="Source Journal"
-                        context="{'group_by': 'source_journal_id'}" />
-                    <filter name="group_by_destination" string="Destination Journal"
-                        context="{'group_by': 'destination_journal_id'}" />
-                    <filter name="group_by_date" string="Date" context="{'group_by': 'date'}" />
+                <group>
+                    <filter name="state" string="Status" context="{'group_by': 'state'}" />
+                    <filter name="source" string="Source Journal" context="{'group_by': 'source_journal_id'}" />
+                    <filter name="destination" string="Destination Journal" context="{'group_by': 'destination_journal_id'}" />
+                    <filter name="date" string="Date" context="{'group_by': 'date'}" />
                 </group>
             </search>
         </field>
     </record>
-    
+
     <!-- ============================================ -->
     <!-- ACTIONS & MENUS -->
     <!-- ============================================ -->
@@ -155,18 +140,9 @@
             <p>Transfer funds between bank and cash journals easily.</p>
         </field>
     </record>
-    
-    <!-- Menu Item (under taking > Actions) -->
-    <menuitem id="menu_tak_journal_transfer_root" name="Journal Transfers"
-        action="action_tak_journal_transfer" sequence="150"
-        web_icon="tak_journal_transfer,static/description/icon.png"
-        groups="tak_journal_transfer.group_journal_transfer_user" />
 
-    <menuitem
-        id="menu_tak_journal_transfer_submenu"
-        name="Transfer"
-        action="action_tak_journal_transfer"
-        groups="tak_journal_transfer.group_journal_transfer_user"
-        parent="tak_journal_transfer.menu_tak_journal_transfer_root"
-        sequence="10" />
+    <!-- Menu Item (under taking > Actions) -->
+    <menuitem id="menu_tak_journal_transfer_root" name="Journal Transfers" action="action_tak_journal_transfer" sequence="150" web_icon="tak_journal_transfer,static/description/icon.png" groups="tak_journal_transfer.group_journal_transfer_user" />
+
+    <menuitem id="menu_tak_journal_transfer_submenu" name="Transfer" action="action_tak_journal_transfer" groups="tak_journal_transfer.group_journal_transfer_user" parent="tak_journal_transfer.menu_tak_journal_transfer_root" sequence="10" />
 </odoo>

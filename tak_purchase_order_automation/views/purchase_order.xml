@@ -7,7 +7,6 @@
             <list string="Vendors">
                 <field name="name"/>
                 <field name="phone"/>
-                <field name="mobile"/>
                 <field name="email"/>
                 <field name="city"/>
                 <field name="credit" decoration-success="1" decoration-bf="1"/>

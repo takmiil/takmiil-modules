@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name' : 'Purchase Order Automation',
-    'version' : '19.0',
+    'version' : '19.1',
     'category': 'Purchases',
     'maintainer': 'Takmiil Enterprise Solutions',
     'summary': """Enable auto purchase workflow with purchase order confirmation. Include operations like Auto Create bills, Auto Validate bills and Auto Transfer Recipts Order.""",
